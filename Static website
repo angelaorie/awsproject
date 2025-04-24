@@ -1,8 +1,5 @@
 # 🛡️ Secure Static Website Hosting on AWS
 
-![Built with AWS](https://img.shields.io/badge/Built%20with-AWS-orange?style=for-the-badge&logo=amazon-aws)
-![MIT License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
-
 This project securely hosts a static website on AWS using the following services:
 - **Amazon S3** for static site hosting
 - **CloudFront** for global content delivery
@@ -55,7 +52,7 @@ This project securely hosts a static website on AWS using the following services
       "Resource": "arn:aws:s3:::mywebsite-secure/*",
       "Condition": {
         "StringEquals": {
-          "AWS:SourceArn": "arn:aws:cloudfront::YOUR-AWS-ACCOUNT-ID:distribution/YOUR-DISTRIBUTION-ID"
+          "AWS:SourceArn": "arn:aws:cloudfront::655885323449:distribution/YOUR-DISTRIBUTION-ID"
         }
       }
     }
