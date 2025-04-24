@@ -1,2 +1,0 @@
-# awsproject
-AWS Cloud Project
