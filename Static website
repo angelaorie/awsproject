@@ -1,0 +1,111 @@
+# 🛡️ Secure Static Website Hosting on AWS
+
+![Built with AWS](https://img.shields.io/badge/Built%20with-AWS-orange?style=for-the-badge&logo=amazon-aws)
+![MIT License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
+
+This project securely hosts a static website on AWS using the following services:
+- **Amazon S3** for static site hosting
+- **CloudFront** for global content delivery
+- **AWS Certificate Manager (ACM)** for HTTPS
+- **AWS WAF** for protection against common web exploits
+
+---
+
+## 🖼️ Architecture Diagram
+
+```plaintext
+  User
+   │
+   ▼
+[CloudFront Distribution] ◄───── [AWS WAF: Filters malicious traffic]
+   │
+   ▼
+[S3 Bucket (Private)] ◄───── [OAC: Origin Access Control for secure access]
+```
+
+---
+
+## 🔧 Step-by-Step Setup
+
+### 1. Create an S3 Bucket for Static Hosting
+- Go to **S3** in AWS Console.
+- Create a bucket named e.g., `mywebsite-secure`.
+- Uncheck "Block all public access" if prompted (we’ll secure this with OAC).
+
+### 2. Enable Static Website Hosting & Upload Files
+- Click on the bucket → **Properties** → Enable *Static website hosting*.
+- Choose "Host a static website", set `index.html` as the index document.
+- Upload your `index.html`, `.jpg`, CSS, etc. via the **Objects** tab.
+
+### 3. Restrict S3 Bucket Access (CloudFront-only)
+- Go to **Permissions → Bucket Policy**.
+- Add this policy (replace with your CloudFront OAC principal and bucket name):
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowCloudFrontAccess",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudfront.amazonaws.com"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::mywebsite-secure/*",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceArn": "arn:aws:cloudfront::YOUR-AWS-ACCOUNT-ID:distribution/YOUR-DISTRIBUTION-ID"
+        }
+      }
+    }
+  ]
+}
+```
+
+### 4. Create a CloudFront Distribution
+- Go to **CloudFront → Create distribution**.
+- **Origin domain**: Paste your S3 **static website hosting endpoint** (not the bucket name).
+- **Origin Access**: Choose "Origin Access Control (OAC)".
+- Signing behavior: **Sign requests (recommended)**.
+- Save and wait for deployment (~15 mins).
+
+### 5. Set Default Root Object
+- In your distribution → **Settings → Edit**.
+- Set `index.html` as the **Default root object**.
+
+### 6. Add SSL Certificate with ACM
+- Go to **Certificate Manager → Request public certificate**.
+- Add your domain (e.g., `www.example.com`) and validate via DNS.
+- Attach this certificate in CloudFront’s "Alternate domain names (CNAMEs)".
+
+### 7. Attach AWS WAF for Protection
+- Go to **WAF → Create Web ACL**.
+- Choose **CloudFront** as the resource type.
+- Add managed rules (like AWSManagedRulesCommonRuleSet).
+- Attach your Web ACL to the distribution.
+
+---
+
+## ✅ Result
+Your static website is now:
+- ✅ Delivered via global CDN (CloudFront)
+- ✅ Encrypted with HTTPS
+- ✅ Protected from bots & attacks (WAF)
+- ✅ Secured with S3 private access (OAC)
+
+---
+
+## 📁 Example Files
+```
+mywebsite-secure/
+├── index.html
+├── styles.css
+├── images/
+│   └── banner.jpg
+```
+
+---
+
+
+
