@@ -6,6 +6,22 @@ This project securely hosts a static website on AWS using the following services
 - **AWS Certificate Manager (ACM)** for HTTPS
 - **AWS WAF** for protection against common web exploits
 
+
+🔐 Security Best Practices Followed
+
+❌ No root account access (IAM used instead)
+
+✅ MFA enabled for all IAM users
+
+✅ S3 access logging enabled
+
+✅ CloudFront enforces HTTPS
+
+✅ WAF blocks XSS, SQLi, and bad bots
+
+✅ Least privilege IAM policy for users
+
+ 
 ---
 
 ## 🖼️ Architecture Diagram
@@ -52,7 +68,7 @@ This project securely hosts a static website on AWS using the following services
       "Resource": "arn:aws:s3:::mywebsite-secure/*",
       "Condition": {
         "StringEquals": {
-          "AWS:SourceArn": "arn:aws:cloudfront::655885323449:distribution/YOUR-DISTRIBUTION-ID"
+          "AWS:SourceArn": "arn:aws:cloudfront::655885323449:distribution/E3HHR6JYLCW3MU"
         }
       }
     }
@@ -62,7 +78,7 @@ This project securely hosts a static website on AWS using the following services
 
 ### 4. Create a CloudFront Distribution
 - Go to **CloudFront → Create distribution**.
-- **Origin domain**: Paste your S3 **static website hosting endpoint** (not the bucket name).
+- **Origin domain**: Paste your S3 **static website hosting endpoint** (mywebsite-secure.s3-website-us-east-1.amazonaws.com).
 - **Origin Access**: Choose "Origin Access Control (OAC)".
 - Signing behavior: **Sign requests (recommended)**.
 - Save and wait for deployment (~15 mins).
@@ -85,11 +101,13 @@ This project securely hosts a static website on AWS using the following services
 ---
 
 ## ✅ Result
-Your static website is now:
+The static website is now:
 - ✅ Delivered via global CDN (CloudFront)
 - ✅ Encrypted with HTTPS
 - ✅ Protected from bots & attacks (WAF)
 - ✅ Secured with S3 private access (OAC)
+- Custom 404 error page (Optional)
+
 
 ---
 
