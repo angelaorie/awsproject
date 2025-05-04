@@ -1,87 +1,66 @@
-Terraform AWS S3 Static Website with CloudFront
-This Terraform project provisions an AWS S3 bucket configured as a static website, fronted by a CloudFront CDN for global distribution with HTTPS.
+ 🌐 Terraform AWS Static Website with HTTPS (S3 + CloudFront)
 
-Features
-✅ S3 Bucket – Hosts static website files (HTML, CSS, JS)
-✅ CloudFront CDN – Provides fast, secure global delivery
-✅ Origin Access Identity (OAI) – Secures S3 access via CloudFront only
-✅ HTTPS Enabled – Uses CloudFront’s default SSL certificate
-✅ Default Root Object – Automatically serves index.html
+This project uses [Terraform](https://www.terraform.io/) to deploy a static website to AWS S3 and deliver it securely over HTTPS using CloudFront.
 
-Prerequisites
-Before deploying, ensure you have:
+---
 
-AWS CLI configured with credentials (aws configure)
+## 📦 What This Project Does
 
-Terraform installed (Download Here)
+- Creates an S3 bucket to host a static website
+- Uploads your `index.html` file
+- Restricts public access to the bucket
+- Configures a CloudFront distribution for global delivery
+- Enables HTTPS via CloudFront's default certificate
 
-A globally unique S3 bucket name (update in main.tf)
+---
 
-Deployment Steps
-1. Clone the Repository
-sh
-git clone https://github.com/your-repo/terraform-s3-cloudfront.git
-cd terraform-s3-cloudfront
+## 🛠 Prerequisites
+
+- ✅ [Terraform Installed](https://developer.hashicorp.com/terraform/downloads)
+- ✅ AWS Account
+- ✅ AWS CLI configured **or** export credentials:
+  ```bash
+  export AWS_ACCESS_KEY_ID="your-access-key"
+  export AWS_SECRET_ACCESS_KEY="your-secret-key"
+📁 Project Structure
+bash
+Copy
+Edit
+terraform-s3-website/
+├── main.tf          # Terraform config (S3 + CloudFront)
+├── index.html       # Your website file
+├── README.md        # Project instructions
+🚀 How to Use
+1. Clone the repo (or copy files)
+bash
+Copy
+Edit
+git clone https://github.com/yourusername/terraform-s3-website.git
+cd terraform-s3-website
 2. Initialize Terraform
-sh
+bash
+Copy
+Edit
 terraform init
-3. Review & Apply Changes
-sh
-terraform plan  # Preview changes
-terraform apply # Deploy infrastructure
-Note: CloudFront deployment may take 5-10 minutes.
+3. Deploy the website
+bash
+Copy
+Edit
+terraform apply
+# Type "yes" when prompted
+4. Visit Your Website
+Copy the CloudFront URL from the output — it looks like:
 
-4. Upload Website Files
-sh
-aws s3 cp index.html s3://your-bucket-name/
-Replace index.html with your website files.
-
-Accessing Your Website
-CloudFront URL:
-https://<distribution-id>.cloudfront.net
-(Find distribution-id in AWS Console or terraform output)
-
-S3 Website Endpoint (Unsecured):
-http://your-bucket-name.s3-website-us-east-1.amazonaws.com
-
-Terraform Outputs
-After deployment, Terraform will display:
-
-CloudFront Domain – The HTTPS-enabled CDN URL
-
-S3 Bucket Name – Your static website bucket
-
-Example:
-
-sh
-Outputs:
-cloudfront_domain = "d123.cloudfront.net"
-s3_bucket_name = "my-unique-s3-website-bucket"
-Cleaning Up
-To destroy all resources:
-
-sh
-terraform destroy
-Warning: This will permanently delete your S3 bucket and CloudFront distribution.
+arduino
+Copy
+Edit
+https://d123abc456def.cloudfront.net
+Open it in your browser!
 
 Troubleshooting
 Issue	Solution
 Access BentSet error	Verify S3 bucket policy allows CloudFront OAI
 CloudFront returns 403	Ensure index.html exists in S3
 Changes not reflecting?	Create a CloudFront invalidation (/*)
-License
-MIT License. See LICENSE for details.
 
-🚀 Happy Hosting!
-For questions, open an issue or reach out via [email/contact].
-
-Project Structure
-terraform-s3-cloudfront/
-├── main.tf          # Main Terraform configuration
-├── README.md        # This file
-└── index.html       # Sample website file (optional)
-References
-AWS S3 Static Hosting
-
-CloudFront + S3 Origin
 
