@@ -22,40 +22,35 @@ This project uses [Terraform](https://www.terraform.io/) to deploy a static webs
   ```bash
   export AWS_ACCESS_KEY_ID="your-access-key"
   export AWS_SECRET_ACCESS_KEY="your-secret-key"
+
 📁 Project Structure
 bash
-Copy
-Edit
 terraform-s3-website/
 ├── main.tf          # Terraform config (S3 + CloudFront)
 ├── index.html       # Your website file
 ├── README.md        # Project instructions
 🚀 How to Use
+
 1. Clone the repo (or copy files)
 bash
-Copy
-Edit
 git clone https://github.com/yourusername/terraform-s3-website.git
 cd terraform-s3-website
+
 2. Initialize Terraform
 bash
-Copy
-Edit
 terraform init
+
 3. Deploy the website
 bash
-Copy
-Edit
 terraform apply
 # Type "yes" when prompted
+
 4. Visit Your Website
 Copy the CloudFront URL from the output — it looks like:
 
-arduino
-Copy
-Edit
 https://d123abc456def.cloudfront.net
 Open it in your browser!
+
 
 Troubleshooting
 Issue	Solution
