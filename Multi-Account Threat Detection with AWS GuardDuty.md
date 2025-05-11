@@ -15,11 +15,6 @@ A centralized security monitoring solution that uses AWS GuardDuty, EventBridge,
 - **Cost-optimized** using AWS Free Tier eligible services
 - **Real-time response** to security incidents
 
-# Multi-Account Threat Detection with AWS GuardDuty
-
-![AWS Security](https://img.shields.io/badge/AWS-Security-orange?logo=amazon-aws) 
-![Serverless](https://img.shields.io/badge/Architecture-Serverless-blue) 
-![Free Tier](https://img.shields.io/badge/Cost-Free_Tier_Eligible-green)
 
 ## Architecture
 
