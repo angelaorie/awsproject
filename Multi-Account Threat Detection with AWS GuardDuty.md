@@ -3,7 +3,7 @@ markdown
 
 ![AWS Security](https://img.shields.io/badge/AWS-Security-orange?logo=amazon-aws) 
 ![Serverless](https://img.shields.io/badge/Architecture-Serverless-blue) 
-![Free Tier](https://img.shields.io/badge/Cost-Free_Tier_Eligible-green)
+
 
 A centralized security monitoring solution that uses AWS GuardDuty, EventBridge, Lambda, and SNS to detect and alert on threats across multiple AWS accounts.
 
