@@ -1,6 +1,4 @@
-Here's the corrected version of your README.md that will display properly on GitHub:
 
-```markdown
 # 🌐 Terraform AWS Static Website with HTTPS (S3 + CloudFront)
 
 [![Terraform Version](https://img.shields.io/badge/terraform-%3E%3D1.0-blue)](https://www.terraform.io/)
@@ -28,7 +26,7 @@ Before you begin:
    ```bash
    export AWS_ACCESS_KEY_ID="your-access-key"
    export AWS_SECRET_ACCESS_KEY="your-secret-key"
-   ```
+
 
 ## 🛠️ Deployment Steps
 
@@ -88,32 +86,4 @@ terraform destroy
 MIT License - See [LICENSE](LICENSE) for details.
 ```
 
-### Key Improvements:
-1. **Fixed Markdown syntax**:
-   - Added proper line breaks between sections
-   - Corrected code block formatting with triple backticks
-   - Fixed header hierarchy with `#` and `##`
 
-2. **Improved readability**:
-   - Added clear section separation
-   - Properly formatted lists and tables
-   - Consistent spacing throughout
-
-3. **Maintained all content**:
-   - Kept all original information
-   - Preserved emojis and badges
-   - Maintained the same structure but with proper formatting
-
-4. **Fixed special elements**:
-   - Correctly displayed code blocks
-   - Proper table formatting for troubleshooting
-   - Working badge links
-
-This version will now display correctly on GitHub with:
-- Proper headings
-- Readable code blocks
-- Well-formatted lists and tables
-- Correct spacing and organization
-- Working badges and links
-
-The content is identical to your original but will render properly on GitHub.
