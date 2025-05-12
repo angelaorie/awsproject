@@ -1,41 +1,34 @@
-🌐 Terraform AWS Static Website with HTTPS (S3 + CloudFront)
-Terraform Version
-AWS Provider
+# 🌐 Terraform AWS Static Website with HTTPS (S3 + CloudFront)
+
+[![Terraform Version](https://img.shields.io/badge/terraform-%3E%3D1.0-blue)](https://www.terraform.io/)
+[![AWS Provider](https://img.shields.io/badge/AWS-Provider-orange)](https://registry.terraform.io/providers/hashicorp/aws/latest)
 
 This Terraform project deploys a secure static website to AWS using:
+- **S3** for storage
+- **CloudFront** for global CDN delivery
+- **HTTPS** encryption (via CloudFront's free SSL)
 
-S3 for storage
+![Architecture Diagram](https://via.placeholder.com/600x300?text=S3+%2B+CloudFront+Architecture)
 
-CloudFront for global CDN delivery
+## 🚀 Features
 
-HTTPS encryption (via CloudFront's free SSL)
+- ✅ Automated deployment with Terraform
+- ✅ Secure HTTPS delivery
+- ✅ Global CDN caching
+- ✅ Private S3 bucket (no public access)
+- ✅ Automatic index document handling
 
-Architecture Diagram
+## 📋 Prerequisites
 
-🚀 Features
-✅ Automated deployment with Terraform
-
-✅ Secure HTTPS delivery
-
-✅ Global CDN caching
-
-✅ Private S3 bucket (no public access)
-
-✅ Automatic index document handling
-
-📋 Prerequisites
 Before you begin:
+1. [Terraform installed](https://developer.hashicorp.com/terraform/downloads) (v1.0+)
+2. AWS account with permissions
+3. AWS credentials configured via:
+   ```bash
+   export AWS_ACCESS_KEY_ID="your-access-key"
+   export AWS_SECRET_ACCESS_KEY="your-secret-key"
 
-Terraform installed (v1.0+)
-
-AWS account with permissions
-
-AWS credentials configured via:
-
-bash
-export AWS_ACCESS_KEY_ID="your-access-key"
-export AWS_SECRET_ACCESS_KEY="your-secret-key"
-🛠️ Deployment Steps
+   🛠️ Deployment Steps
 1. Clone the Repository
 bash
 git clone https://github.com/yourusername/terraform-s3-website.git
@@ -77,4 +70,3 @@ CloudFront Developer Guide
 
 📜 License
 MIT License - See LICENSE for details.
-
