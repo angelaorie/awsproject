@@ -117,9 +117,4 @@ terraform destroy
 - [CloudFront Best Practices](https://aws.amazon.com/cloudfront/best-practices/)
 - [WAF Rule Groups](https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html)
 
----
 
-💡 **Tip:** For production environments, consider adding:
-- CI/CD pipeline for automated deployments
-- Monitoring with CloudWatch
-- DDoS protection with AWS Shield
