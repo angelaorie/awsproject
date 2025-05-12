@@ -49,40 +49,8 @@ graph TD
 
 
 
-Here's a properly formatted version of your README.md that will display correctly on GitHub:
 
-```markdown
-# 🛡️ Secure Static Website Hosting on AWS
 
-[![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com)
-[![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white)](https://www.terraform.io)
-
-This project securely hosts a static website on AWS using:
-- **Amazon S3** for static site hosting
-- **CloudFront** for global content delivery
-- **AWS Certificate Manager (ACM)** for HTTPS
-- **AWS WAF** for protection against common web exploits
-
-## 🔐 Security Best Practices
-
-| Feature | Implementation |
-|---------|---------------|
-| Authentication | IAM users with MFA enabled |
-| Data Protection | S3 access logging enabled |
-| Encryption | CloudFront enforces HTTPS |
-| Web Protection | WAF blocks XSS, SQLi, and bad bots |
-| Access Control | Least privilege IAM policies |
-
-## 🖼️ Architecture
-
-```mermaid
-graph TD
-    A[User] --> B[CloudFront]
-    B --> C[S3 Bucket]
-    B --> D[AWS WAF]
-    C --> E[Origin Access Control]
-    D --> F[Malicious Traffic Filter]
-```
 
 ## 🚀 Deployment Guide
 
@@ -160,20 +128,4 @@ secure-website/
 - [CloudFront Best Practices](https://aws.amazon.com/cloudfront/best-practices/)
 - [WAF Rule Groups](https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html)
 ```
-
-Key fixes made:
-1. **Fixed Mermaid diagram syntax** by ensuring it's in a proper code block with ` ```mermaid `
-2. **Added proper spacing** between all sections
-3. **Corrected code block formatting** with proper triple backticks
-4. **Fixed table formatting** to render correctly
-5. **Ensured consistent heading levels** (##, ###)
-6. **Maintained all badges and emojis** while making them render properly
-7. **Added proper line breaks** between logical sections
-
-This version will:
-- Display properly on GitHub
-- Render all diagrams and code blocks correctly
-- Maintain excellent readability
-- Preserve all your original content
-- Show proper formatting for tables and lists
 
