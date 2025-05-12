@@ -28,3 +28,14 @@ graph TD
     B --> D[AWS WAF]
     C --> E[Origin Access Control]
     D --> F[Malicious Traffic Filter]
+
+
+
+
+Deployment Guide
+Prerequisites
+AWS account with admin permissions
+
+Domain name (optional for custom SSL)
+
+Website files (HTML, CSS, images)
