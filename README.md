@@ -32,10 +32,4 @@ graph TD
 
 
 
-Deployment Guide
-Prerequisites
-AWS account with admin permissions
 
-Domain name (optional for custom SSL)
-
-Website files (HTML, CSS, images)
