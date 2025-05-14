@@ -75,7 +75,39 @@ Centralized security monitoring solution using:
    - **Name**: `GuardDutyAlertProcessor`
    - **Runtime**: Python 3.9
 3. Paste the [provided Python code](#lambda-code)
-4. Under **Configuration → Permissions**, attach `AmazonSNSFullAccess`
+```bash
+import json
+import boto3
+
+def lambda_handler(event, context):
+    # Initialize SNS client
+    sns = boto3.client('sns')
+    sns_topic_arn = 'arn:aws:sns:us-east-1:123456789012:GuardDutyAlerts'  # Replace with your SNS ARN
+    
+    # Extract GuardDuty finding
+    finding = event['detail']
+    
+    # Check if severity is HIGH or CRITICAL
+    if finding['severity'] >= 7:  # 7 = High, 8+ = Critical
+        message = f"🚨 GuardDuty Alert! 🚨\n\n"
+        message += f"Type: {finding['type']}\n"
+        message += f"Severity: {finding['severity']}\n"
+        message += f"Account: {finding['accountId']}\n"
+        message += f"Region: {event['region']}\n"
+        message += f"Description: {finding['description']}\n"
+        
+        # Publish to SNS
+        sns.publish(
+            TopicArn=sns_topic_arn,
+            Subject="🚨 AWS GuardDuty Security Alert",
+            Message=message
+        )
+    
+    return {"status": "Processed"}
+```
+
+    
+5. Under **Configuration → Permissions**, attach `AmazonSNSFullAccess`
 
 
 ---
