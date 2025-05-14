@@ -10,24 +10,17 @@ Automatically detect and respond to unauthorized S3 actions using AWS Lambda, Cl
 
 ## Architecture
 ```mermaid
+
+
+
+
+
 graph TD
     A[CloudTrail] -->|Logs S3 API Calls| B(EventBridge)
     B -->|Triggers on AccessDenied| C[Lambda]
     C -->|Isolate Bucket| D[S3]
     C -->|Send Alerts| E[SNS]
     C -->|Revoke Keys| F[IAM]
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
