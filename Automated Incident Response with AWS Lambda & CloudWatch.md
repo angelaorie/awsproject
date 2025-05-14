@@ -1,6 +1,3 @@
-Here's a comprehensive `README.md` for your **Automated AWS Incident Response System** with S3 focus, formatted for GitHub:
-
-```markdown
 # Automated Incident Response with AWS Lambda & S3
 
 Automatically detect and respond to unauthorized S3 actions using AWS Lambda, CloudTrail, and EventBridge.
@@ -19,8 +16,6 @@ graph TD
     C -->|Isolate Bucket| D[S3]
     C -->|Send Alerts| E[SNS]
     C -->|Revoke Keys| F[IAM]
-```
-
 
 
 
