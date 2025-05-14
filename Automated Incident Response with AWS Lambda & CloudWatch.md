@@ -11,40 +11,28 @@ Automated detection and response system for S3 security incidents using AWS Lamb
 - 🔒 Automatic bucket quarantine on unauthorized access
 - 📨 Multi-channel alerts via Amazon SNS
 - 📊 Comprehensive audit logging with CloudTrail
-- 💰 Free-tier compatible architecture
 
-## Architecture Overview
+## Setup Guide (AWS Console)
 
-```mermaid
-graph TD
-    A[CloudTrail] -->|Logs S3 API Calls| B(EventBridge)
-    B -->|Triggers on Security Events| C[Lambda]
-    C -->|1. Lock Bucket| D[S3]
-    C -->|2. Revoke Keys| E[IAM]
-    C -->|3. Send Alerts| F[SNS]
-```
+### 1. Configure CloudTrail Logging
+1. Navigate to **AWS CloudTrail** service
+2. Click **Create trail**
+3. Enter trail name: `S3SecurityTrail`
+4. Under **Storage location**, create a new S3 bucket or select existing
+5. Enable **Log file validation**
+6. Click **Create trail**
 
+### 2. Create Lambda Function
+1. Go to **AWS Lambda** service
+2. Click **Create function**
+3. Select **Author from scratch**
+4. Enter name: `S3SecurityResponder`
+5. Choose **Python 3.9** runtime
+6. Under Permissions:
+   - Select **Create a new role with basic Lambda permissions**
+7. Click **Create function**
+8. Paste the following code:
 
-
-## Prerequisites
-
-- AWS account with administrative privileges
-- AWS CLI configured with proper credentials
-- Python 3.9+ environment
-- At least one S3 bucket for testing
-
-## Deployment Guide
-
-### 1. CloudTrail Configuration
-```bash
-aws cloudtrail create-trail \
-    --name S3SecurityTrail \
-    --s3-bucket-name s3-security-logs-$(aws sts get-caller-identity --query Account --output text) \
-    --enable-log-file-validation
-```
-
-### 2. Lambda Function Deployment
-Create `s3_security_response.py`:
 ```python
 import boto3
 
@@ -68,7 +56,7 @@ def lambda_handler(event, context):
     
     # Alerting
     sns.publish(
-        TopicArn='arn:aws:sns:us-east-1:${aws sts get-caller-identity --query Account --output text}:S3SecurityAlerts',
+        TopicArn='arn:aws:sns:YOUR_REGION:YOUR_ACCOUNT_ID:S3SecurityAlerts',
         Subject="🚨 S3 Security Incident",
         Message=f"""Unauthorized access detected:
         - Bucket: {bucket_name}
@@ -77,71 +65,78 @@ def lambda_handler(event, context):
     )
     
     return {'statusCode': 200}
+
 ```
 
-### 3. EventBridge Rule Setup
+9. Click **Deploy**
+
+### 3. Set Up EventBridge Rule
+1. Navigate to **Amazon EventBridge** service
+2. Click **Create rule**
+3. Enter name: `S3SecurityMonitor`
+4. For **Event bus**, select **default**
+5. Under **Rule type**, select **Rule with an event pattern**
+6. Click **Next**
+7. For **Event source**, choose **AWS events or EventBridge partner events**
+8. Paste this event pattern:
+
 ```json
 {
   "source": ["aws.s3"],
   "detail-type": ["AWS API Call via CloudTrail"],
   "detail": {
     "eventSource": ["s3.amazonaws.com"],
-    "eventName": [
-      "DeleteBucket",
-      "PutBucketPolicy",
-      "PutBucketAcl"
-    ],
+    "eventName": ["DeleteBucket", "PutBucketPolicy", "PutBucketAcl"],
     "errorCode": ["AccessDenied"]
   }
 }
 ```
 
-### 4. Notification Configuration
-```bash
-aws sns create-topic --name S3SecurityAlerts
-aws sns subscribe \
-    --topic-arn arn:aws:sns:us-east-1:$(aws sts get-caller-identity --query Account --output text):S3SecurityAlerts \
-    --protocol email \
-    --notification-endpoint your.email@example.com
-```
+9. Click **Next**
+10. For **Target**, select **Lambda function**
+11. Choose your `S3SecurityResponder` function
+12. Click **Next** then **Create rule**
+
+### 4. Configure SNS Alerts
+1. Go to **Amazon SNS** service
+2. Click **Create topic**
+3. Enter name: `S3SecurityAlerts`
+4. Click **Create topic**
+5. With the topic selected, click **Create subscription**
+6. Choose protocol: **Email**
+7. Enter your email address
+8. Click **Create subscription**
+9. Check your email and confirm the subscription
 
 ## Testing the System
 
-1. Simulate unauthorized access:
-```bash
-aws s3api put-bucket-acl \
-    --bucket your-test-bucket \
-    --acl public-read
-```
+1. **Trigger a test event**:
+   - Navigate to **S3** service
+   - Select a test bucket
+   - Try to modify bucket ACLs (will be blocked if properly configured)
 
-2. Verify:
-- Lambda execution logs in CloudWatch
-- CloudTrail --> Event history 
-- SNS notification received
+2. **Verify response**:
+   - Check **Lambda** → **Monitor** → **Logs** for execution details
+   - Search CloudTrail → Event history
+   - Confirm you received an SNS alert email
 
 ## Security Best Practices
 
-- Enable S3 Block Public Access at account level
-- Use bucket policies instead of ACLs
-- Enable MFA Delete for important buckets
-- Regularly review access logs
-
+- Enable **S3 Block Public Access** at account level
+- Use **bucket policies** instead of ACLs
+- Enable **MFA Delete** for important buckets
+- Regularly review **CloudTrail logs**
 
 ## Troubleshooting
 
-**Issue**: No events detected  
-✅ Verify CloudTrail is logging S3 data events  
-✅ Check EventBridge rule region matches CloudTrail  
-  
-
-## Roadmap
-
-- [ ] Add support for cross-account protection
-- [ ] Implement automatic bucket versioning
-- [ ] Add Slack/MS Teams integration
+| Issue | Solution |
+|-------|----------|
+| No events detected | Verify CloudTrail is logging S3 data events |
+| Alerts not received | Check Lambda execution role has `sns:Publish` permission |
+| Bucket not locked | Confirm Lambda has `s3:PutPublicAccessBlock` permission |
 
 ## License
 
-Apache License 2.0 - See [LICENSE](LICENSE) for details
+Apache License 2.0
 ```
 
