@@ -60,6 +60,16 @@ graph TD
 
 
 
+
+
+
+
+
+
+
+
+
+
 ## Prerequisites
 
 - AWS account with administrative privileges
