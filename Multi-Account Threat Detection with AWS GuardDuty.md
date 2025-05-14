@@ -1,75 +1,123 @@
-markdown
-# Multi-Account Threat Detection with AWS GuardDuty
+# Multi-Account AWS Threat Detection with GuardDuty
 
-![AWS Security](https://img.shields.io/badge/AWS-Security-orange?logo=amazon-aws) 
-![Serverless](https://img.shields.io/badge/Architecture-Serverless-blue) 
+![AWS Security](https://img.shields.io/badge/AWS-Security-orange?logo=amazon-aws)
+![GitHub GUI Guide](https://img.shields.io/badge/Guide-GUI_Steps-blue)
+
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [GUI Setup Guide](#gui-setup-guide)
+   - [Enable GuardDuty](#1-enable-guardduty)
+   - [Configure EventBridge](#2-configure-eventbridge)
+   - [Set Up Alerts](#3-set-up-alerts)
+3. [Testing](#testing)
+4. [Cost Optimization](#cost-optimization)
+5. [Troubleshooting](#troubleshooting)
+
+---
+
+## Project Overview
+Centralized security monitoring solution using:
+- 🛡️ AWS GuardDuty (threat detection)
+- 🔗 Amazon EventBridge (event routing)
+- ⚡ AWS Lambda (alert processing)
+- 📧 Amazon SNS (notifications)
 
 
-A centralized security monitoring solution that uses AWS GuardDuty, EventBridge, Lambda, and SNS to detect and alert on threats across multiple AWS accounts.
+---
 
-## 📌 Features
+## GUI Setup Guide
 
-- **Centralized threat detection** across multiple AWS accounts
-- **Automated alerts** for high-severity findings via email/Slack
-- **Long-term log storage** in S3 for compliance
-- **Cost-optimized** using AWS Free Tier eligible services
-- **Real-time response** to security incidents
+### 1. Enable GuardDuty
+**Step-by-Step:**
+1. Log in to [AWS Console](https://console.aws.amazon.com/)
+2. Navigate to **GuardDuty** (under "Security, Identity, & Compliance")
+3. Click **"Enable GuardDuty"**
+4. Under **Settings**, enable "Malware Protection" (recommended)
 
 
-## Architecture
+---
 
-```mermaid
-graph TD
-    A[GuardDuty] -->|Security Findings| B[EventBridge]
-    B -->|All Findings| C[S3 Bucket]
-    B -->|Critical Findings| D[Lambda]
-    D --> E[SNS]
-    E --> F[Email/Slack]
-```
+### 2. Configure EventBridge
+**Step-by-Step:**
+1. Go to [EventBridge Console](https://console.aws.amazon.com/events/)
+2. Click **"Create rule"**
+   - **Name**: `GuardDutyToS3`
+   - **Event bus**: default
+3. Under **Event pattern**, paste:
+   ```json
+   {
+     "source": ["aws.guardduty"],
+     "detail-type": ["GuardDuty Finding"]
+   }
+ 
+   ```
+4. Add target:
+   - **Target type**: S3 bucket
+   - **Bucket**: Create new `guardduty-findings-<account-id>`
+   - Enable **encryption (SSE-S3)**
 
-## Prerequisites
-- AWS Account(s) with admin permissions
-- AWS CLI configured (for optional testing)
-- Email address or Slack webhook for alerts
-
-## Deployment Steps
-
-### 1. Enable GuardDuty in Master Account
-```bash
-aws guardduty create-detector --enable
-```
-
-### 2. Configure EventBridge Rule
-1. Navigate to [Amazon EventBridge](https://console.aws.amazon.com/events/)
-2. Create rule with pattern:
-```json
-{
-  "source": ["aws.guardduty"],
-  "detail-type": ["GuardDuty Finding"]
-}
-```
+---
 
 ### 3. Set Up Alerts
-1. Create SNS topic
-2. Deploy Lambda function with provided Python code
-3. Subscribe your email/Slack to SNS
+#### Create SNS Topic
+1. Go to [SNS Console](https://console.aws.amazon.com/sns/)
+2. Click **"Create topic"**
+   - **Type**: Standard
+   - **Name**: `GuardDutyAlerts`
+3. Add subscriptions:
+   - **Protocol**: Email
+   - **Endpoint**: Your email address
+   - Confirm subscription via email
+
+#### Deploy Lambda Function
+1. Go to [Lambda Console](https://console.aws.amazon.com/lambda/)
+2. Click **"Create function"**
+   - **Name**: `GuardDutyAlertProcessor`
+   - **Runtime**: Python 3.9
+3. Paste the [provided Python code](#lambda-code)
+4. Under **Configuration → Permissions**, attach `AmazonSNSFullAccess`
 
 
+---
 
 ## Testing
-Simulate threats to verify detection:
+Simulate threats via AWS CLI:
 ```bash
-# SSH brute force simulation
-for i in {1..10}; do
+# SSH brute force (trigger UnauthorizedAccess finding)
+for i in {1..5}; do
   ssh -o StrictHostKeyChecking=no -o ConnectTimeout=1 fakeuser@YOUR_EC2_IP
 done
-
-# Suspicious API calls
-aws iam list-users --region us-east-1
-aws s3api list-buckets --region eu-west-1
 ```
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Verify in:
+- GuardDuty **Findings** tab (within 15 mins)
+- Your email inbox for alerts
 
+
+---
+
+## Troubleshooting
+❌ **No findings appearing?**
+1. Check CloudTrail is enabled:  
+   ```bash
+   aws cloudtrail describe-trails
+   ```
+2. Verify EventBridge rule shows **"Invocations" > 0**
+
+❌ **Alerts not arriving?**
+1. Confirm SNS subscription is **confirmed** (check email)
+2. Check Lambda **CloudWatch logs** for errors
+
+---
+
+## License
+MIT License - See [LICENSE](LICENSE) file
+
+## Contributing
+1. Fork this repository
+2. Create a branch (`git checkout -b feature/improvement`)
+3. Commit changes (`git commit -m 'Add new feature'`)
+4. Push to branch (`git push origin feature/improvement`)
+5. Open a Pull Request
+```
 
