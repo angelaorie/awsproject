@@ -20,6 +20,17 @@ graph TD
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 Prerequisites
 AWS account with admin permissions
 
