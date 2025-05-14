@@ -22,6 +22,19 @@ graph TD
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Prerequisites
 - AWS account with admin permissions
 - AWS CLI configured (`aws configure`)
