@@ -23,34 +23,6 @@ graph TD
     C -->|2. Revoke Keys| E[IAM]
     C -->|3. Send Alerts| F[SNS]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Here's the revised `README.md` focused on S3 incident response:
 
 ```markdown
@@ -79,6 +51,14 @@ graph TD
     C -->|2. Revoke Keys| E[IAM]
     C -->|3. Send Alerts| F[SNS]
 ```
+
+
+
+
+
+
+
+
 
 ## Prerequisites
 
