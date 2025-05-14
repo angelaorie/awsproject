@@ -27,6 +27,30 @@ graph TD
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Here's the revised `README.md` focused on S3 incident response:
 
 ```markdown
@@ -185,19 +209,3 @@ aws s3api put-bucket-acl \
 Apache License 2.0 - See [LICENSE](LICENSE) for details
 ```
 
-Key S3-specific improvements:
-1. Focused on S3-specific security actions
-2. Added S3 best practices section
-3. Included relevant S3 API calls in EventBridge pattern
-4. Simplified remediation to focus on public access blocking
-5. Added bucket-specific testing commands
-6. Removed EC2-specific components
-7. Enhanced alert messaging with S3-specific details
-8. Added S3-specific security recommendations
-9. Simplified architecture diagram for S3 flow
-10. Included MFA Delete recommendation
-
-Would you like me to add any S3-specific features like:
-- Glacier vault lock integration?
-- S3 Object Lock configuration?
-- Cross-region replication protection?
