@@ -18,23 +18,6 @@ graph TD
     C -->|Revoke Keys| F[IAM]
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Prerequisites
 - AWS account with admin permissions
 - AWS CLI configured (`aws configure`)
