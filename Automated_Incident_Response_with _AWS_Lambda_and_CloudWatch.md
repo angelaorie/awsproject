@@ -139,4 +139,3 @@ def lambda_handler(event, context):
 
 Apache License 2.0
 ```
-
