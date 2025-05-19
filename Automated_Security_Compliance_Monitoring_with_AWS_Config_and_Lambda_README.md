@@ -1,89 +1,117 @@
-# Automated Security Compliance Monitoring with AWS Config & Lambda
+# Automated AWS Compliance Monitoring with Real-Time Alerts 🛡️
 
-![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
-A serverless solution to automatically monitor AWS resource compliance against security benchmarks (CIS, HIPAA, etc.) and receive real-time alerts.
-
-## Features
-
-- 🛡️ Continuous compliance monitoring using AWS Config
-- 🔔 Real-time alerts via Amazon SNS (email/SMS)
-- 📊 Optional visualization with QuickSight
-- ⚡ Serverless architecture (Lambda)
-- 🔄 Automated remediation capabilities
-
-## Architecture
+**This project automates security compliance monitoring** by configuring AWS Config to evaluate resources against security best practices (like CIS AWS Foundations Benchmark) and triggers Lambda-powered alerts via Amazon SNS when non-compliant resources are detected.
 
 ```mermaid
-graph TD
-    A[AWS Config] -->|Detects non-compliance| B[AWS Lambda]
-    B -->|Sends alerts| C[Amazon SNS]
-    C -->|Notifies| D[Email/SMS]
-    A -->|Stores logs| E[Amazon S3]
-    E -->|Analyze| F[QuickSight]
+graph LR
+    A[AWS Resources] -->|Configuration Changes| B[AWS Config]
+    B -->|Compliance Events| C[Lambda]
+    C -->|Alerts| D[SNS]
+    D -->|Notifications| E[Email/SMS]
+    B -->|Logs| F[S3]
+    F -->|Analytics| G[QuickSight]
 
 ```
 
-## Prerequisites
+## Key Features ✨
+- Continuous compliance monitoring against **CIS, HIPAA, PCI** standards
+- Real-time alerts via **email/SMS** when violations occur
+- **Visual dashboard** for compliance trends (QuickSight)
+- **100% AWS Console** implementation (GUI-focused)
+- Cost-optimized with free tier options
 
-- AWS account with admin permissions
-- AWS CLI configured
-- Python 3.8+
-- Basic understanding of AWS services
-
-## Setup Guide
+## GUI Setup Guide 🖥️
 
 ### 1. Enable AWS Config
+(https://console.aws.amazon.com/config)
+1. Open **AWS Config Console**
+2. Click "Get started"
+3. Configure:
+   - ✅ Record **All resources**
+   - 🗄️ Create S3 bucket for logs
+   - 👔 Create IAM role automatically
+
+### 2. Add Compliance Rules
+
 ```bash
-aws configservice subscribe --s3-bucket YOUR_BUCKET_NAME
+CIS Rules to Enable:
+- s3-bucket-public-read-prohibited
+- iam-password-policy 
+- vpc-default-security-group-closed
 ```
 
-### 2. Deploy Lambda Function
-```bash
-cd lambda
-pip install -r requirements.txt -t .
-zip -r ../compliance-alert.zip .
-aws lambda create-function \
-    --function-name ComplianceAlertHandler \
-    --runtime python3.9 \
-    --handler lambda_function.lambda_handler \
-    --role arn:aws:iam::123456789012:role/lambda-execution-role \
-    --zip-file fileb://compliance-alert.zip
-```
+### 3. Create Alert System
+| Component | Screenshot | Action |
+|-----------|------------|--------|
+| **SNS Topic** |  | 1. Create topic<br>2. Subscribe email |
+| **Lambda** |  | Deploy [this Python code](#lambda-code) |
 
-### 3. Configure SNS Alerts
-```bash
-aws sns create-topic --name ComplianceAlerts
-aws sns subscribe \
-    --topic-arn arn:aws:sns:us-east-1:123456789012:ComplianceAlerts \
-    --protocol email \
-    --notification-endpoint your.email@example.com
-```
+### 4. Connect Components
 
-## Configuration
+1. In AWS Config Rules
+2. Select rule → **Actions** → **Manage remediation**
+3. Choose your Lambda function
 
-| Environment Variable | Description | Example |
-|----------------------|-------------|---------|
-| `SNS_TOPIC_ARN` | SNS Topic for alerts | `arn:aws:sns:us-east-1:123456789012:ComplianceAlerts` |
-| `MIN_SEVERITY` | Minimum severity for alerts | `HIGH` |
+---
+
+## Project Description 📝
+This solution implements automated security governance by:
+1. **Continuously monitoring** AWS resource configurations
+2. **Evaluating compliance** against industry benchmarks
+3. **Alerting security teams** in real-time via multiple channels
+4. **Maintaining audit trails** in S3 for compliance reporting
+
+**Supported Standards:**
+- CIS AWS Foundations Benchmark v1.4
+- AWS Foundational Security Best Practices
+- Custom organizational policies
 
 
+---
 
-## Troubleshooting
+## Technical Details ⚙️
+<details>
+<summary>🔽 Lambda Code (Python)</summary>
 
-**No alerts received?**
-1. Check Lambda CloudWatch logs
-2. Verify SNS subscription is confirmed
-3. Test with forced violation:
 ```python
-# In Lambda code:
-sns.publish(TopicArn=os.environ['SNS_TOPIC_ARN'], 
-           Message="TEST", 
-           Subject="Test Alert")
+import boto3, os
+
+def lambda_handler(event, context):
+    config = boto3.client('config')
+    sns = boto3.client('sns')
+    
+    # Get non-compliant resources
+    violations = config.get_compliance_details_by_config_rule(
+        ConfigRuleName=event['configRuleName'],
+        ComplianceTypes=['NON_COMPLIANT']
+    )
+    
+    if violations['EvaluationResults']:
+        alert_message = f"""
+        🚨 AWS Compliance Alert 🚨
+        Rule: {event['configRuleName']}
+        Account: {event.get('accountId', 'N/A')}
+        Violations: {len(violations['EvaluationResults']}
+        """
+        sns.publish(
+            TopicArn=os.environ['SNS_TOPIC'],
+            Message=alert_message,
+            Subject=f"AWS Compliance Alert: {event['configRuleName']}"
+        )
+```
+</details>
+
+---
+
+## Cost Optimization 💰
+
+
+**Free Tier Tips:**
+- Use 2 Config rules max
+- Limit S3 storage to 5GB
+- 1 SNS topic with email only
+- Disable global resource recording
+
 ```
 
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
-```
